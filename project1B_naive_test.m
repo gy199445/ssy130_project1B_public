@@ -71,8 +71,12 @@ D = 8; % Same as upsampling rate!!
 y = yi(1:D:end);
 
 %% OFDM decoding (channel unknown)
-[H_, symbol_] = OFDM_equalization(y,pn_symbol,N,N_cp);
-bits_ = sym2bits(symbol_);
-
-% Calculate error rate
-disp(['BER: ' num2str(sum(bits_ ~= bits)/length(bits))]);
+% Check that received message is long enough
+if length(y) >= (2*N + 2*N_cp);
+    [H_, symbol_] = OFDM_equalization(y,pn_symbol,N,N_cp);
+    bits_ = sym2bits(symbol_);
+    % Calculate error rate
+    disp(['BER: ' num2str(sum(bits_ ~= bits)/length(bits))]);
+else
+    warning('Received symbol too short');
+end
