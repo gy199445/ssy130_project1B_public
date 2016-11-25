@@ -49,9 +49,11 @@ sigma = 0.1; % noise level
 ytrans = simulate_audio_channel(zmr, sigma);
 
 % Detect start of transmission, get OFDM package
-threshold = 100; %energy threshold
+threshold = 1.3; %energy threshold
+% Samples per frame
+N_f = 100;
 
-[start_of_signal, end_of_signal] = detectSignal(ytrans, threshold);
+[start_of_signal, end_of_signal] = detectSignal(ytrans, threshold, N_f);
 
 % get signal
 yrec = ytrans(start_of_signal:end_of_signal)';
