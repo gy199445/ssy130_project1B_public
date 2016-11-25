@@ -45,13 +45,13 @@ zm = zi.*exp(1i*2*pi*fcm/fs*n);
 zmr = real(zm);
 
 %% Transmit OFDM symbol
-sigma = 0.00003; % noise level
+sigma = 0.1; % noise level
 ytrans = simulate_audio_channel(zmr, sigma);
 
 % Detect start of transmission, get OFDM package
-eps = 1E-4; %energy threshold
-start_of_signal = find(abs(ytrans) > eps,1);
-end_of_signal = length(ytrans) - find(abs(flipud(ytrans)) > eps, 1);
+threshold = 100; %energy threshold
+
+[start_of_signal, end_of_signal] = detectSignal(ytrans, threshold);
 
 % get signal
 yrec = ytrans(start_of_signal:end_of_signal)';
