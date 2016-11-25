@@ -1,15 +1,32 @@
-function [ sos, eos ] = detectSignal( signal, threshold )
-%DETECTSIGNAL Energy detection of signal
+function [ sos, eos ] = detectSignal( signal, threshold, N_f )
+%DETECTSIGNAL Simple frame based energy detector
 %   Returns indices for start and end of signal
 
-    % Use first N samples to determine noise floor
-    N = 1000;
-    noise_floor = sum(signal(1:N).^2)/N;
 
-    eps = noise_floor*threshold;    
     
-    sos = find(signal.^2 > eps,1);
-    eos = length(signal) - find(flipud(signal.^2) > eps, 1);
+    % Use first 10 samples to determine noise floor
+    noise_floor = sum(abs(signal(1:10*N_f)))/10;
+
+    eps = noise_floor*threshold;
+    
+    sos = 0; % return 0 if no signal found
+    eos = 0;
+    i = 1; % current index
+    L = length(signal);
+    % Detect start of signal
+    while i < L - N_f && sos == 0
+        if sum(abs(signal(i:(i + N_f - 1)))) > eps
+            sos = i;
+        end
+        i = i + N_f;
+    end
+    % Detect end of signal
+    while i < L - N_f && eos == 0
+        if sum(abs(signal(i:(i + N_f - 1)))) < eps
+            eos = i + N_f - 1;
+        end
+        i = i + N_f;
+    end
 
 end
 
