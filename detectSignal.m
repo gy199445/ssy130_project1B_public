@@ -7,6 +7,13 @@ function [ sos, eos ] = detectSignal( signal, threshold, N_f )
     % Use first 10 samples to determine noise floor
     noise_floor = sum(abs(signal(1:10*N_f)))/10;
 
+    % If 0 noise, use perfect detection
+    if noise_floor == 0
+        sos = find(abs(signal) > 0, 1);
+        eos = length(signal) - find(abs(flipud(signal)) > 0, 1);
+        return;
+    end
+    
     eps = noise_floor*threshold;
     
     sos = 0; % return 0 if no signal found
