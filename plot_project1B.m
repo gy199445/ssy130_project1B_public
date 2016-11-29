@@ -30,12 +30,24 @@ legend('Interpolated','Modulated')
 xlabel('Frequency (Hz)');
 title('Effects of modulation');
 
-% Plot real signal
+% Plot spectrum of transmitted real signal
 figure;
 semilogy(F,abs([fft(zi.',NN) fft(zm.',NN) fft(zmr.',NN) ]) ) % Check transforms
 legend('Interpolated','Modulated','Real and modulated')
 xlabel('Frequency (Hz)');
-title('Real signal');
+title('Transmitted signal');
+
+% Plot transmitted signal in time domain
+figure;
+plot((1:length(ytrans)).*(1/fs),ytrans);
+ylabel('Amplitude');
+xlabel('t [s]');
+
+% Plot received real signal after energy detection
+figure;
+semilogy(F,abs([fft(yrec.',NN) ]) ) % Check transforms
+xlabel('Frequency (Hz)');
+title('Received signal');
 
 % Plot demodulated received signal
 figure;
