@@ -7,9 +7,10 @@ function [ sos, eos ] = detectSignal( signal, threshold, N_f )
     noise_floor = sum(abs(signal(1:10*N_f)))/10;
 
     % If 0 noise, use perfect detection
+    nf_eps = 1E-2;
     if noise_floor == 0
-        sos = find(abs(signal) > 0, 1);
-        eos = length(signal) - find(abs(flipud(signal)) > 0, 1);
+        sos = find(abs(signal) > nf_eps, 1);
+        eos = length(signal) - find(abs(flipud(signal)) > nf_eps, 1);
         return;
     end
     
